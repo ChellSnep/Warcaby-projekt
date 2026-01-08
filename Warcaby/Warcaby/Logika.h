@@ -40,7 +40,7 @@ private:
     int m_winner;
     Point m_multiJumpPiece;
 
-    // Metody walidacji - teraz poprawnie sprawdzaj¹ bierki na planszy
+    // Metody walidacji
     bool IsPlayerPiece(int x, int y, int player) const;
     bool IsValidSlide(int x1, int y1, int x2, int y2) const;
     bool IsValidJump(int x1, int y1, int x2, int y2) const;

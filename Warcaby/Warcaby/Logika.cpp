@@ -36,7 +36,6 @@ void CheckersGame::Initialize() {
 bool CheckersGame::MovePiece(int x1, int y1, int x2, int y2) {
     if (m_gameOver || m_anim.active) return false;
 
-    // Jeœli trwa seria bicia, mo¿na ruszyæ tylko t¹ sam¹ bierk¹
     if (m_multiJumpPiece.x != -1 && (x1 != m_multiJumpPiece.x || y1 != m_multiJumpPiece.y)) {
         return false;
     }
@@ -51,7 +50,7 @@ bool CheckersGame::MovePiece(int x1, int y1, int x2, int y2) {
     // Walidacja ruchu przed rozpoczêciem animacji
     if (isJump ? IsValidJump(x1, y1, x2, y2) : IsValidSlide(x1, y1, x2, y2)) {
         m_anim = { true, x1, y1, x2, y2, 0.0f, m_board[y1][x1], isJump };
-        m_board[y1][x1] = EMPTY; // Usuwamy tymczasowo z planszy dla p³ynnoœci animacji
+        m_board[y1][x1] = EMPTY;
         return true;
     }
 
@@ -142,7 +141,6 @@ bool CheckersGame::IsValidJump(int x1, int y1, int x2, int y2) const {
     int midY = (y1 + y2) / 2;
     Piece midP = m_board[midY][midX];
 
-    // Bicie nastêpuje tylko, gdy przeskakujemy przeciwnika
     return (midP != EMPTY && (midP % 2 != p % 2));
 }
 

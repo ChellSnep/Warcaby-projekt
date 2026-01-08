@@ -13,7 +13,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         return 0;
 
     case WM_TIMER:
-        // Aktualizacja stanu animacji lub wykonanie ruchu bota
         if (g_game.m_anim.active) {
             g_game.UpdateAnimation(0.08f); // Szybkoœæ animacji
             InvalidateRect(hwnd, NULL, FALSE);

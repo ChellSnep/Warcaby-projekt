@@ -16,7 +16,6 @@ public:
 
 private:
     void DrawMenu(HDC hdc);
-    // DrawPiece teraz operuje na wspó³rzêdnych ekranu (pikselach)
     void DrawPiece(HDC hdc, Piece p, int pixelX, int pixelY);
     void DrawSidebar(HDC hdc, const CheckersGame& game);
     void DrawWinScreen(HDC hdc, int winner);

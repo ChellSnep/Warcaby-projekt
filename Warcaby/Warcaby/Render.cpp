@@ -29,7 +29,7 @@ void GameRenderer::Draw(HDC hdc, const CheckersGame& game, int selX, int selY) {
         }
     }
 
-    // Warstwa animacji: rysowanie bierki w locie
+    // Rysowanie bierki w locie
     if (game.m_anim.active) {
         int px = (int)(game.m_anim.x1 * CELL_SIZE + (game.m_anim.x2 - game.m_anim.x1) * CELL_SIZE * game.m_anim.progress);
         int py = (int)(game.m_anim.y1 * CELL_SIZE + (game.m_anim.y2 - game.m_anim.y1) * CELL_SIZE * game.m_anim.progress);
@@ -56,7 +56,6 @@ void GameRenderer::DrawPiece(HDC hdc, Piece p, int px, int py) {
     SelectObject(hdc, oldB); SelectObject(hdc, oldP); DeleteObject(br); DeleteObject(pen);
 }
 
-// Pozosta³e metody renderowania menu i UI
 void GameRenderer::DrawMenu(HDC hdc) { 
     RECT bg = { 0, 0, BOARD_PIXELS + SIDEBAR_WIDTH, BOARD_PIXELS }; 
     FillRect(hdc, &bg, (HBRUSH)GetStockObject(WHITE_BRUSH)); 
