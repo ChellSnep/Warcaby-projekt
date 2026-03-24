@@ -13,26 +13,26 @@ RECT GameRenderer::GetRankingMenuBtnRect(){ return { BOARD_PIXELS/2-90, 280, BOA
 RECT GameRenderer::GetSaveScoreBtnRect() { return {  70, 295, 240, 325 }; }
 RECT GameRenderer::GetMenuBtnRect()      { return { 260, 295, 400, 325 }; }
 
-RECT GameRenderer::GetConfirmNameBtnRect(){ return { 150, 280, 300, 310 }; }
-RECT GameRenderer::GetSkipNameBtnRect()  { return { 320, 280, 440, 310 }; }
+RECT GameRenderer::GetConfirmNameBtnRect() { return { 100, 270, 230, 300 }; }
+RECT GameRenderer::GetSkipNameBtnRect() { return { 250, 270, 380, 300 }; }
 
-RECT GameRenderer::GetBackBtnRect()      { return { BOARD_PIXELS/2-70, 445, BOARD_PIXELS/2+70, 472 }; }
+RECT GameRenderer::GetBackBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 445, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 472 }; }
 
 // ============================================================
 //  POMOCNIK – PRZYCISK Z OBRAMOWANIEM
 // ============================================================
 
 void GameRenderer::DrawButton(HDC hdc, RECT r, COLORREF bg,
-                               const wchar_t* txt, int len) {
+    const wchar_t* txt, int len) {
     HBRUSH br = CreateSolidBrush(bg);
     FillRect(hdc, &r, br);
     DeleteObject(br);
     FrameRect(hdc, &r, (HBRUSH)GetStockObject(BLACK_BRUSH));
     SetTextColor(hdc, RGB(0, 0, 0));
-    int cx = r.left + (r.right  - r.left) / 2;
-    int cy = r.top  + (r.bottom - r.top)  / 2 - 8;
     SetBkMode(hdc, TRANSPARENT);
-    TextOut(hdc, cx - len * 4, cy, txt, len);
+
+    // Używamy DrawText, aby idealnie wyśrodkować tekst w pionie i poziomie
+    DrawText(hdc, txt, len, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 // ============================================================
@@ -229,8 +229,8 @@ void GameRenderer::DrawWinScreen(HDC hdc, const CheckersGame& game) {
 // ============================================================
 
 void GameRenderer::DrawNameEntry(HDC hdc, int winner, const std::wstring& nameInput) {
-    // Tlo nakladki
-    RECT box = { 80, 130, BOARD_PIXELS - 80, 330 };
+    // Tlo nakladki - poszerzamy i wydluzamy okienko
+    RECT box = { 60, 120, BOARD_PIXELS - 60, 350 };
     HBRUSH boxBr = CreateSolidBrush(RGB(250, 248, 235));
     FillRect(hdc, &box, boxBr);
     DeleteObject(boxBr);
@@ -246,14 +246,15 @@ void GameRenderer::DrawNameEntry(HDC hdc, int winner, const std::wstring& nameIn
     COLORREF wc = (winner == RED) ? RGB(180, 0, 0) : RGB(30, 30, 30);
     SetTextColor(hdc, wc);
     std::wstring hdr = (winner == RED) ? L"Zwyciezca: CZERWONE"
-                                       : L"Zwyciezca: CZARNE";
-    TextOut(hdc, BOARD_PIXELS/2 - 85, 148, hdr.c_str(), (int)hdr.size());
+        : L"Zwyciezca: CZARNE";
+    // Poprawione wyśrodkowanie
+    TextOut(hdc, BOARD_PIXELS / 2 - 80, 140, hdr.c_str(), (int)hdr.size());
 
     SetTextColor(hdc, RGB(60, 60, 60));
-    TextOut(hdc, BOARD_PIXELS/2 - 85, 178, L"Podaj imie gracza (max 20 znakow):", 34);
+    TextOut(hdc, BOARD_PIXELS / 2 - 125, 175, L"Podaj imie gracza (max 20 znakow):", 34);
 
     // Pole tekstowe
-    RECT inputBox = { 100, 208, BOARD_PIXELS - 100, 240 };
+    RECT inputBox = { 100, 210, BOARD_PIXELS - 100, 245 };
     HBRUSH inputBr = CreateSolidBrush(RGB(255, 255, 255));
     FillRect(hdc, &inputBox, inputBr);
     DeleteObject(inputBr);
@@ -262,16 +263,17 @@ void GameRenderer::DrawNameEntry(HDC hdc, int winner, const std::wstring& nameIn
     // Wpisany tekst + kursor
     SetTextColor(hdc, RGB(0, 0, 0));
     std::wstring display = nameInput + L"|";
-    TextOut(hdc, inputBox.left + 5, inputBox.top + 6,
-            display.c_str(), (int)display.size());
+    TextOut(hdc, inputBox.left + 5, inputBox.top + 8,
+        display.c_str(), (int)display.size());
 
     // Przyciski
     DrawButton(hdc, GetConfirmNameBtnRect(), RGB(150, 220, 150), L"ZAPISZ", 6);
-    DrawButton(hdc, GetSkipNameBtnRect(),    RGB(220, 220, 220), L"POMIN",  5);
+    DrawButton(hdc, GetSkipNameBtnRect(), RGB(220, 220, 220), L"POMIN", 5);
 
+    // Tekst dolny (podniesiony, zeby nie uciekal poza ramke)
     SetTextColor(hdc, RGB(120, 120, 120));
-    TextOut(hdc, BOARD_PIXELS/2 - 85, 322,
-            L"Nacisnij Enter lub kliknij ZAPISZ", 33);
+    TextOut(hdc, BOARD_PIXELS / 2 - 120, 320,
+        L"Nacisnij Enter lub kliknij ZAPISZ", 33);
 }
 
 // ============================================================
@@ -333,7 +335,7 @@ void GameRenderer::DrawRanking(HDC hdc,
                   return a.wins > b.wins;
               });
 
-    int maxShow = std::min((int)sorted.size(), 10);
+    int maxShow = (std::min)((int)sorted.size(), 10);
     for (int i = 0; i < maxShow; i++) {
         int rowY = 96 + i * 32;
 
@@ -394,7 +396,7 @@ void GameRenderer::DrawRanking(HDC hdc,
 
     // Pokaz max 10 najnowszych (od konca)
     int hSize   = (int)history.size();
-    int hStart  = std::max(0, hSize - 10);
+    int hStart = (std::max)(0, hSize - 10);
     int hCount  = hSize - hStart;
 
     for (int i = 0; i < hCount; i++) {

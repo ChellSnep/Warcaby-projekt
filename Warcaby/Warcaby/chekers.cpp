@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
 // ============================================================
 //  GLOBALNE OBIEKTY GRY I RENDERERA
@@ -36,35 +37,80 @@ std::wstring g_nameInput  = L"";
 bool         g_lastWasAI  = false;   // tryb ostatniej partii
 
 // ============================================================
-//  POMOCNIK – ZAPIS WYNIKU DO RANKINGU I HISTORII
+//  ZAPIS I ODCZYT DO PLIKU (PERSYSTENCJA)
 // ============================================================
 
+void SaveRankingData() {
+    std::wofstream file(L"ranking.txt");
+    // Zapisujemy całą tablicę g_ranking (która zawsze będzie miała max 4 elementy)
+    for (const auto& rec : g_ranking) {
+        file << rec.wins << L" " << rec.losses << L" " << rec.name << L"\n";
+    }
+}
+
+void LoadRankingData() {
+    std::wifstream file(L"ranking.txt");
+    if (file.is_open()) {
+        std::vector<PlayerRecord> loadedRanking;
+        int wins, losses;
+
+        while (file >> wins >> losses) {
+            std::wstring name;
+            std::getline(file, name);
+            if (!name.empty() && name[0] == L' ') name = name.substr(1);
+
+            if (!name.empty()) {
+                loadedRanking.push_back({ name, wins, losses });
+            }
+        }
+
+        // Jeśli plik zawierał prawidłowe dane, nadpisujemy szablony z kodu
+        if (!loadedRanking.empty()) {
+            g_ranking = loadedRanking;
+        }
+    }
+}
+
 static void SaveResult(const std::wstring& name,
-                        int totalMoves, bool vsAI,
-                        int redCap, int blackCap) {
+    int totalMoves, bool vsAI,
+    int redCap, int blackCap, int winner) {
     if (name.empty()) return;
+
+    // Zakładamy, że człowiek gra Czerwonymi. Jeśli to tryb vs AI i wygrały Czarne, człowiek przegrał.
+    bool isWin = !(vsAI && winner == BLACK);
+
+    // Ustal imię zwycięzcy do historii gier
+    std::wstring historyWinnerName = isWin ? name : L"AI";
 
     // Szukaj istniejacego gracza (case-sensitive)
     bool found = false;
     for (auto& rec : g_ranking) {
         if (rec.name == name) {
-            rec.wins++;
+            if (isWin) rec.wins++;
+            else       rec.losses++; // <--- Rejestracja porażki
             found = true;
             break;
         }
     }
     if (!found) {
-        g_ranking.push_back({ name, 1, 0 });
+        // Dodaj gracza z prawidłowym początkowym wynikiem
+        g_ranking.push_back({ name, isWin ? 1 : 0, isWin ? 0 : 1 });
     }
 
     // Posortuj malejaco po wygranych
     std::sort(g_ranking.begin(), g_ranking.end(),
-              [](const PlayerRecord& a, const PlayerRecord& b) {
-                  return a.wins > b.wins;
-              });
+        [](const PlayerRecord& a, const PlayerRecord& b) {
+            return a.wins > b.wins;
+        });
+    
+    if (g_ranking.size() > 4) {
+        g_ranking.resize(4);
+    }
 
-    // Dodaj wpis do historii
-    g_history.push_back({ name, totalMoves, vsAI, redCap, blackCap });
+    SaveRankingData();
+
+    // Dodaj wpis do historii z prawidłową nazwą zwycięzcy
+    g_history.push_back({ historyWinnerName, totalMoves, vsAI, redCap, blackCap });
 
     // Ogranicz history do 50 wpisow
     if (g_history.size() > 50)
@@ -142,8 +188,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             if (PtInRect(&rConfirm, pt)) {
                 // Zapisz wynik i wróc do menu
                 SaveResult(g_nameInput,
-                           g_game.GetTotalMoves(), g_lastWasAI,
-                           g_game.GetRedCaptures(), g_game.GetBlackCaptures());
+                    g_game.GetTotalMoves(), g_lastWasAI,
+                    g_game.GetRedCaptures(), g_game.GetBlackCaptures(), g_game.GetWinner());
                 g_nameInput.clear();
                 g_game.m_state = MENU;
             } else if (PtInRect(&rSkip, pt)) {
@@ -206,14 +252,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         if (g_game.m_state == ENTER_NAME) {
             if (wParam == VK_BACK) {
                 if (!g_nameInput.empty()) g_nameInput.pop_back();
-            } else if (wParam == VK_RETURN) {
+            }
+            else if (wParam == VK_RETURN) {
                 // Enter = zatwierdzenie (jak klikniecie ZAPISZ)
                 SaveResult(g_nameInput,
-                           g_game.GetTotalMoves(), g_lastWasAI,
-                           g_game.GetRedCaptures(), g_game.GetBlackCaptures());
+                    g_game.GetTotalMoves(), g_lastWasAI,
+                    g_game.GetRedCaptures(), g_game.GetBlackCaptures(), g_game.GetWinner());
                 g_nameInput.clear();
                 g_game.m_state = MENU;
-            } else if (wParam == 27) {
+            }
+            else if (wParam == 27) {
                 // Escape = anulowanie
                 g_nameInput.clear();
                 g_game.m_state = MENU;
@@ -256,6 +304,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 // ============================================================
 
 int WINAPI wWinMain(HINSTANCE h, HINSTANCE, PWSTR, int n) {
+    LoadRankingData();
+        
     WNDCLASS wc   = { 0 };
     wc.lpfnWndProc  = WindowProc;
     wc.hInstance    = h;
