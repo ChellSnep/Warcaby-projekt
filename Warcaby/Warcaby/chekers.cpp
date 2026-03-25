@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <fstream>
+#include "sqlite3.h"
 
 // ============================================================
 //  GLOBALNE OBIEKTY GRY I RENDERERA
@@ -40,35 +40,147 @@ bool         g_lastWasAI  = false;   // tryb ostatniej partii
 //  ZAPIS I ODCZYT DO PLIKU (PERSYSTENCJA)
 // ============================================================
 
-void SaveRankingData() {
-    std::wofstream file(L"ranking.txt");
-    // Zapisujemy całą tablicę g_ranking (która zawsze będzie miała max 4 elementy)
-    for (const auto& rec : g_ranking) {
-        file << rec.wins << L" " << rec.losses << L" " << rec.name << L"\n";
-    }
-}
-
 void LoadRankingData() {
-    std::wifstream file(L"ranking.txt");
-    if (file.is_open()) {
+    sqlite3* db;
+    // Otwiera plik bazy (lub tworzy ranking.db, jeśli nie istnieje)
+    if (sqlite3_open("ranking.db", &db) != SQLITE_OK) return;
+
+    // Tworzymy tabelę Ranking, jeśli to pierwsze uruchomienie
+    const char* createTableSQL =
+        "CREATE TABLE IF NOT EXISTS Ranking ("
+        "Wins INTEGER, "
+        "Losses INTEGER, "
+        "Name TEXT);";
+    sqlite3_exec(db, createTableSQL, nullptr, nullptr, nullptr);
+
+    sqlite3_stmt* stmt;
+    // Wyciągamy dane prosto z bazy, posortowane według wygranych (dla pewności)
+    const char* query = "SELECT Wins, Losses, Name FROM Ranking ORDER BY Wins DESC LIMIT 4;";
+
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) == SQLITE_OK) {
         std::vector<PlayerRecord> loadedRanking;
-        int wins, losses;
 
-        while (file >> wins >> losses) {
-            std::wstring name;
-            std::getline(file, name);
-            if (!name.empty() && name[0] == L' ') name = name.substr(1);
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            int wins = sqlite3_column_int(stmt, 0);
+            int losses = sqlite3_column_int(stmt, 1);
+            // Wyciągamy tekst jako format 16-bitowy (zgodny z std::wstring w Win32)
+            const void* text = sqlite3_column_text16(stmt, 2);
 
+            std::wstring name = text ? static_cast<const wchar_t*>(text) : L"";
             if (!name.empty()) {
                 loadedRanking.push_back({ name, wins, losses });
             }
         }
 
-        // Jeśli plik zawierał prawidłowe dane, nadpisujemy szablony z kodu
+        // Jeśli coś wczytaliśmy, zastępujemy tym domyślny ranking
         if (!loadedRanking.empty()) {
             g_ranking = loadedRanking;
         }
     }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+}
+
+void SaveRankingData() {
+    sqlite3* db;
+    if (sqlite3_open("ranking.db", &db) != SQLITE_OK) return;
+
+    // Najprostsza logika aktualizacji dla małych baz: czyścimy tabelę i wpisujemy nową TOP 4
+    sqlite3_exec(db, "DELETE FROM Ranking;", nullptr, nullptr, nullptr);
+
+    sqlite3_stmt* stmt;
+    const char* insertSQL = "INSERT INTO Ranking (Wins, Losses, Name) VALUES (?, ?, ?);";
+    sqlite3_prepare_v2(db, insertSQL, -1, &stmt, nullptr);
+
+    // Zapisujemy tylko 4 najlepsze wyniki z bieżącej sesji
+    int count = 0;
+    for (const auto& rec : g_ranking) {
+        sqlite3_bind_int(stmt, 1, rec.wins);
+        sqlite3_bind_int(stmt, 2, rec.losses);
+        // Bindujemy szerokie znaki (std::wstring)
+        sqlite3_bind_text16(stmt, 3, rec.name.c_str(), -1, SQLITE_TRANSIENT);
+
+        sqlite3_step(stmt);    // Wykonaj insert
+        sqlite3_reset(stmt);   // Zresetuj zapytanie dla następnego gracza
+
+        count++;
+        if (count >= 4) break; // Po zapisaniu 4 wyników, ucinamy
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+}
+
+void LoadHistoryData() {
+    sqlite3* db;
+    // Tworzymy osobny plik na historię
+    if (sqlite3_open("history.db", &db) != SQLITE_OK) return;
+
+    // Tworzymy tabelę History
+    const char* createTableSQL =
+        "CREATE TABLE IF NOT EXISTS History ("
+        "WinnerName TEXT, "
+        "TotalMoves INTEGER, "
+        "VsAI INTEGER, "
+        "RedCaptures INTEGER, "
+        "BlackCaptures INTEGER);";
+    sqlite3_exec(db, createTableSQL, nullptr, nullptr, nullptr);
+
+    sqlite3_stmt* stmt;
+    const char* query = "SELECT WinnerName, TotalMoves, VsAI, RedCaptures, BlackCaptures FROM History;";
+
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) == SQLITE_OK) {
+        std::vector<GameHistoryEntry> loadedHistory;
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            const void* text = sqlite3_column_text16(stmt, 0);
+            std::wstring name = text ? static_cast<const wchar_t*>(text) : L"";
+            int moves = sqlite3_column_int(stmt, 1);
+            bool vsAI = sqlite3_column_int(stmt, 2) != 0;
+            int redCap = sqlite3_column_int(stmt, 3);
+            int blackCap = sqlite3_column_int(stmt, 4);
+
+            loadedHistory.push_back({ name, moves, vsAI, redCap, blackCap });
+        }
+
+        // Zastępujemy domyślną historię z kodu tylko wtedy, gdy baza nie była pusta
+        if (!loadedHistory.empty()) {
+            g_history = loadedHistory;
+        }
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+}
+
+void SaveHistoryData() {
+    sqlite3* db;
+    if (sqlite3_open("history.db", &db) != SQLITE_OK) return;
+
+    // Czyścimy tabelę przed zapisaniem nowych danych
+    sqlite3_exec(db, "DELETE FROM History;", nullptr, nullptr, nullptr);
+
+    sqlite3_stmt* stmt;
+    const char* insertSQL = "INSERT INTO History (WinnerName, TotalMoves, VsAI, RedCaptures, BlackCaptures) VALUES (?, ?, ?, ?, ?);";
+    sqlite3_prepare_v2(db, insertSQL, -1, &stmt, nullptr);
+
+    // Wyznaczamy indeks, od którego zaczynamy zapisywać, aby zawsze zapisać max 4 OSTATNIE wpisy
+    size_t startIdx = (g_history.size() > 4) ? g_history.size() - 4 : 0;
+
+    for (size_t i = startIdx; i < g_history.size(); ++i) {
+        const auto& entry = g_history[i];
+
+        sqlite3_bind_text16(stmt, 1, entry.winnerName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 2, entry.totalMoves);
+        sqlite3_bind_int(stmt, 3, entry.vsAI ? 1 : 0);
+        sqlite3_bind_int(stmt, 4, entry.redCaptures);
+        sqlite3_bind_int(stmt, 5, entry.blackCaptures);
+
+        sqlite3_step(stmt);
+        sqlite3_reset(stmt);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
 }
 
 static void SaveResult(const std::wstring& name,
@@ -103,10 +215,6 @@ static void SaveResult(const std::wstring& name,
             return a.wins > b.wins;
         });
     
-    if (g_ranking.size() > 4) {
-        g_ranking.resize(4);
-    }
-
     SaveRankingData();
 
     // Dodaj wpis do historii z prawidłową nazwą zwycięzcy
@@ -115,6 +223,8 @@ static void SaveResult(const std::wstring& name,
     // Ogranicz history do 50 wpisow
     if (g_history.size() > 50)
         g_history.erase(g_history.begin());
+
+    SaveHistoryData();
 }
 
 // ============================================================
@@ -305,6 +415,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 int WINAPI wWinMain(HINSTANCE h, HINSTANCE, PWSTR, int n) {
     LoadRankingData();
+    LoadHistoryData();
         
     WNDCLASS wc   = { 0 };
     wc.lpfnWndProc  = WindowProc;

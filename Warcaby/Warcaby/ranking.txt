@@ -1,5 +1,0 @@
-8 2 Kasparow
-5 3 Anna K.
-3 5 Piotr W.
-2 0 Big D
-1 4 Marek S.
