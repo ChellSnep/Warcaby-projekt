@@ -5,36 +5,27 @@
 
 class GameRenderer {
 public:
-    static const int CELL_SIZE     = 60;
+    static const int CELL_SIZE = 60;
     static const int SIDEBAR_WIDTH = 160;
-    static const int BOARD_PIXELS  = 8 * CELL_SIZE;   // 480
+    static const int BOARD_PIXELS = 8 * CELL_SIZE;   // 480
 
-    // ---- Prostokaty przyciskow ----
-
-    // Menu glowne
     RECT Get2PBtnRect();
     RECT GetAIBtnRect();
     RECT GetRankingMenuBtnRect();
+    RECT GetSaveScoreBtnRect();
+    RECT GetMenuBtnRect();
+    RECT GetConfirmNameBtnRect();
+    RECT GetSkipNameBtnRect();
+    RECT GetBackBtnRect();
 
-    // Ekran konca gry
-    RECT GetSaveScoreBtnRect();   // [ZAPISZ WYNIK]
-    RECT GetMenuBtnRect();         // [MENU]
-
-    // Wprowadzanie imienia
-    RECT GetConfirmNameBtnRect(); // [ZAPISZ]
-    RECT GetSkipNameBtnRect();    // [POMIN]
-
-    // Ekran rankingu
-    RECT GetBackBtnRect();        // [POWROT]
-
-    // ---- Glowna funkcja rysowania ----
     void Draw(HDC hdc,
-              const CheckersGame&              game,
-              int                              selX,
-              int                              selY,
-              const std::vector<PlayerRecord>& ranking,
-              const std::vector<GameHistoryEntry>& history,
-              const std::wstring&              nameInput);
+        const CheckersGame& game,
+        int                              selX,
+        int                              selY,
+        const std::vector<PlayerRecord>& ranking,
+        const std::vector<GameHistoryEntry>& history,
+        const std::wstring& nameInput,
+        const GameStats& stats);
 
 private:
     void DrawMenu(HDC hdc);
@@ -43,9 +34,9 @@ private:
     void DrawWinScreen(HDC hdc, const CheckersGame& game);
     void DrawNameEntry(HDC hdc, int winner, const std::wstring& nameInput);
     void DrawRanking(HDC hdc,
-                     const std::vector<PlayerRecord>& ranking,
-                     const std::vector<GameHistoryEntry>& history);
+        const std::vector<PlayerRecord>& ranking,
+        const std::vector<GameHistoryEntry>& history,
+        const GameStats& stats);
 
-    // Pomocnik - przycisk z tekstem
     void DrawButton(HDC hdc, RECT r, COLORREF bg, const wchar_t* txt, int len);
 };

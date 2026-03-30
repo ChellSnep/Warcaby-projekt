@@ -2,17 +2,17 @@
 #include <vector>
 #include <string>
 
-enum Piece      { EMPTY = 0, RED = 1, BLACK = 2, RED_KING = 3, BLACK_KING = 4 };
-enum GameState  { MENU, PLAYING_2P, PLAYING_AI, ENTER_NAME, RANKING };
+enum Piece { EMPTY = 0, RED = 1, BLACK = 2, RED_KING = 3, BLACK_KING = 4 };
+enum GameState { MENU, PLAYING_2P, PLAYING_AI, ENTER_NAME, RANKING };
 
 struct Point { int x, y; };
-struct Move  { int x1, y1, x2, y2; bool isJump; };
+struct Move { int x1, y1, x2, y2; bool isJump; };
 
 struct AnimationData {
-    bool  active   = false;
+    bool  active = false;
     int   x1, y1, x2, y2;
     float progress = 0.0f;
-    Piece piece    = EMPTY;
+    Piece piece = EMPTY;
     bool  isCapture = false;
 };
 
@@ -20,7 +20,7 @@ struct AnimationData {
 
 struct PlayerRecord {
     std::wstring name;
-    int wins   = 0;
+    int wins = 0;
     int losses = 0;
 };
 
@@ -30,6 +30,14 @@ struct GameHistoryEntry {
     bool vsAI;
     int  redCaptures;
     int  blackCaptures;
+};
+
+// NOWOŒÆ: Struktura do statystyk agreguj¹cych
+struct GameStats {
+    int totalGames = 0;
+    double avgMoves = 0.0;
+    int maxMoves = 0;
+    int minMoves = 0;
 };
 
 // ---- Glowna klasa gry ----
@@ -62,7 +70,6 @@ private:
     int   m_winner;
     Point m_multiJumpPiece;
 
-    // Statystyki partii
     int   m_totalMoves;
     int   m_redCaptures;
     int   m_blackCaptures;

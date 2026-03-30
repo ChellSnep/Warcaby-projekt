@@ -124,11 +124,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chekers.cpp" />
+    <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="Logika.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DatabaseManager.h" />
     <ClInclude Include="Logika.h" />
     <ClInclude Include="Render.h" />
   </ItemGroup>
