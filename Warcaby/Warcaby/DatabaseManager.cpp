@@ -5,7 +5,16 @@ DatabaseManager::DatabaseManager(const std::string& dbPath) : m_dbPath(dbPath), 
 
 DatabaseManager::~DatabaseManager() {
     if (m_db) {
+        ClearAllTables();
         sqlite3_close(m_db);
+    }
+}
+
+void DatabaseManager::ClearAllTables() {
+    if (m_db) {
+        ExecuteCommand("DELETR FROM Ranking;");
+        ExecuteCommand("DELETR FROM History;");
+        ExecuteCommand("DELETR FROM PlayerStats;");
     }
 }
 
@@ -21,6 +30,10 @@ bool DatabaseManager::Initialize() {
 
     const char* sqlStats = "CREATE TABLE IF NOT EXISTS PlayerStats (Name TEXT UNIQUE, GamesPlayed INTEGER, TotalMovesMade INTEGER);";
     ExecuteCommand(sqlStats);
+
+    ExecuteCommand("DELETE FROM Ranking;");
+    ExecuteCommand("DELETE FROM History;");
+    ExecuteCommand("DELETE FROM PlayerStats;");
 
     return true;
 }

@@ -11,7 +11,7 @@ public:
 
     bool Initialize();
 
-    void ClearAllTaable();
+    void ClearAllTables();
 
     std::vector<PlayerRecord> LoadRanking();
     void SaveRanking(const std::vector<PlayerRecord>& ranking);

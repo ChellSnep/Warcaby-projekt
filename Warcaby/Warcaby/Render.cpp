@@ -6,9 +6,9 @@
 //  PROSTOKATY PRZYCISKOW
 // ============================================================
 
-RECT GameRenderer::Get2PBtnRect() { return { BOARD_PIXELS / 2 - 90, 160, BOARD_PIXELS / 2 + 90, 205 }; }
-RECT GameRenderer::GetAIBtnRect() { return { BOARD_PIXELS / 2 - 90, 220, BOARD_PIXELS / 2 + 90, 265 }; }
-RECT GameRenderer::GetRankingMenuBtnRect() { return { BOARD_PIXELS / 2 - 90, 280, BOARD_PIXELS / 2 + 90, 325 }; }
+RECT GameRenderer::Get2PBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 160, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 205 }; }
+RECT GameRenderer::GetAIBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 220, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 265 }; }
+RECT GameRenderer::GetRankingMenuBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 280, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 325 }; }
 
 RECT GameRenderer::GetSaveScoreBtnRect() { return { 70, 295, 240, 325 }; }
 RECT GameRenderer::GetMenuBtnRect() { return { 260, 295, 400, 325 }; }
@@ -110,19 +110,16 @@ void GameRenderer::DrawMenu(HDC hdc) {
     HGDIOBJ oldFont = SelectObject(hdc, bigFont);
     SetTextColor(hdc, RGB(80, 30, 0));
     SetBkMode(hdc, TRANSPARENT);
-    TextOut(hdc, BOARD_PIXELS / 2 - 90, 70, L"WARCABY", 7);
+    TextOut(hdc, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 70, L"WARCABY", 7);
     SelectObject(hdc, oldFont);
     DeleteObject(bigFont);
 
     SetTextColor(hdc, RGB(120, 60, 0));
-    TextOut(hdc, BOARD_PIXELS / 2 - 75, 120, L"Wybierz tryb gry:", 17);
+    TextOut(hdc, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 75, 120, L"Wybierz tryb gry:", 17);
 
     DrawButton(hdc, Get2PBtnRect(), RGB(180, 255, 180), L"2 GRACZY", 8);
     DrawButton(hdc, GetAIBtnRect(), RGB(180, 200, 255), L"VS AI", 5);
     DrawButton(hdc, GetRankingMenuBtnRect(), RGB(255, 230, 150), L"RANKING", 7);
-
-    SetTextColor(hdc, RGB(100, 100, 100));
-    TextOut(hdc, BOARD_PIXELS / 2 - 110, 355, L"Baza danych jest aktualizowana na biezaco.", 42);
 }
 
 void GameRenderer::DrawSidebar(HDC hdc, const CheckersGame& game) {
@@ -242,7 +239,7 @@ void GameRenderer::DrawRanking(HDC hdc,
         DEFAULT_PITCH, L"Arial");
     HGDIOBJ oldFont = SelectObject(hdc, titleFont);
     SetTextColor(hdc, RGB(80, 30, 0));
-    TextOut(hdc, BOARD_PIXELS / 2 - 55, 8, L"RANKING", 7);
+    TextOut(hdc, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 55, 8, L"RANKING", 7);
     SelectObject(hdc, oldFont);
     DeleteObject(titleFont);
 
@@ -304,7 +301,7 @@ void GameRenderer::DrawRanking(HDC hdc,
 
     if (sorted.empty()) {
         SetTextColor(hdc, RGB(150, 150, 150));
-        TextOut(hdc, 30, 106, L"Brak danych", 11);
+        TextOut(hdc, 115, 106, L"Brak graczy", 11);
     }
 
     // ============================================================
@@ -328,13 +325,18 @@ void GameRenderer::DrawRanking(HDC hdc,
     MoveToEx(hdc, 318, 90, NULL); LineTo(hdc, 635, 90);
     SelectObject(hdc, oldP2); DeleteObject(linePen2);
 
-    int hSize = (int)history.size();
-    int hStart = (std::max)(0, hSize - 10);
-    int hCount = hSize - hStart;
+    std::vector<GameHistoryEntry> sortedHistory = history;
+    std::sort(sortedHistory.begin(), sortedHistory.end(),
+        [](const GameHistoryEntry& a, const GameHistoryEntry& b) {
+            return a.totalMoves < b.totalMoves;
+        });
+
+    int hSize = (int)sortedHistory.size();
+    int hCount = (std::min)(hSize, 10);
 
     for (int i = 0; i < hCount; i++) {
         int rowY = 96 + i * 32;
-        const GameHistoryEntry& e = history[hStart + i];
+        const GameHistoryEntry& e = sortedHistory[i];
 
         if (i % 2 == 0) {
             RECT rowR = { 318, rowY, 635, rowY + 32 };
@@ -344,7 +346,8 @@ void GameRenderer::DrawRanking(HDC hdc,
         }
 
         SetTextColor(hdc, RGB(40, 40, 80));
-        std::wstring idx = std::to_wstring(hStart + i + 1);
+
+        std::wstring idx = std::to_wstring(i + 1);
         std::wstring moves = std::to_wstring(e.totalMoves);
         std::wstring mode = e.vsAI ? L"AI" : L"2P";
 
@@ -359,17 +362,16 @@ void GameRenderer::DrawRanking(HDC hdc,
 
     if (history.empty()) {
         SetTextColor(hdc, RGB(150, 150, 150));
-        TextOut(hdc, 343, 106, L"Brak historii", 13);
+        TextOut(hdc, 430, 106, L"Brak historii", 13);
     }
 
-    // Linia pionowa, skrocona by nie nachodzic na pasek
     HPEN divPen = CreatePen(PS_SOLID, 2, RGB(120, 90, 40));
     HGDIOBJ oldPDiv = SelectObject(hdc, divPen);
     MoveToEx(hdc, 312, 45, NULL); LineTo(hdc, 312, 385);
     SelectObject(hdc, oldPDiv); DeleteObject(divPen);
 
     // ============================================================
-    //  NOWOSC: PASEK STATYSTYK GLOBALNYCH
+    //  PASEK STATYSTYK GLOBALNYCH
     // ============================================================
     RECT statsBg = { 10, 395, 630, 435 };
     HBRUSH statsBr = CreateSolidBrush(RGB(220, 230, 210));
