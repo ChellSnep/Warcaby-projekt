@@ -2,6 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <random>
 
 // --- KONSTRUKTOR I INICJALIZACJA ---
 
@@ -193,7 +194,8 @@ void CheckersGame::ExecuteBotMove() {
     if (m_turn == BLACK && !m_gameOver && !m_anim.active) {
         std::vector<Move> m = GetAllValidMoves(BLACK);
         if (!m.empty()) {
-            Move b = GetBestMove(4);
+            
+            Move b = GetBestMove(8);
             MovePiece(b.x1, b.y1, b.x2, b.y2);
         }
     }
@@ -205,14 +207,14 @@ std::vector<Move> CheckersGame::GetAllValidMoves(int p) const {
     if (m_multiJumpPiece.x != -1) {
         for (int dx : { -2, 2 }) for (int dy : { -2, 2 })
             if (IsValidJump(m_multiJumpPiece.x, m_multiJumpPiece.y,
-                            m_multiJumpPiece.x + dx, m_multiJumpPiece.y + dy))
+                m_multiJumpPiece.x + dx, m_multiJumpPiece.y + dy))
                 jumps.push_back({ m_multiJumpPiece.x, m_multiJumpPiece.y,
                                   m_multiJumpPiece.x + dx, m_multiJumpPiece.y + dy, true });
         return jumps;
     }
 
-    for (int y = 0; y < 8; y++) {
-        for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
             if (IsPlayerPiece(x, y, p)) {
                 for (int dx : { -2, 2 }) for (int dy : { -2, 2 })
                     if (IsValidJump(x, y, x + dx, y + dy))
@@ -228,40 +230,94 @@ std::vector<Move> CheckersGame::GetAllValidMoves(int p) const {
 }
 
 int CheckersGame::Evaluate() const {
-    int score = 0;
-    for (int y = 0; y < 8; y++)
-        for (int x = 0; x < 8; x++) {
-            if      (m_board[y][x] == BLACK)      score += 10;
-            else if (m_board[y][x] == BLACK_KING) score += 30;
-            else if (m_board[y][x] == RED)        score -= 10;
-            else if (m_board[y][x] == RED_KING)   score -= 30;
+    int value = 0;
+    int n_black = 0;
+    int n_red = 0;
+
+    const int PIECE_VAL = 10;
+    const int KING_VAL = 55;
+    const int SIDE_VAL = 15;
+    const int WALL_VAL = 10;
+    const int CENTER_VAL = 5;
+
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            Piece p = m_board[y][x];
+            if (p == EMPTY) continue;
+
+            if (p == BLACK || p == BLACK_KING) {
+                n_black++;
+                
+                if (x < BOARD_SIZE / 2) {
+                    value += static_cast<int>(1.0 / (x + 1)) * SIDE_VAL;
+                }
+                else {
+                    value += static_cast<int>(1.0 / std::abs(x - BOARD_SIZE)) * SIDE_VAL;
+                }
+                
+                value += static_cast<int>((y + 1) / (float)BOARD_SIZE) * WALL_VAL;
+
+                if (p == BLACK) value += PIECE_VAL;
+                else if (p == BLACK_KING) value += KING_VAL;
+
+                if (x >= 2 && x <= 5) {
+                    value += CENTER_VAL;
+                }
+
+            }
+            else if (p == RED || p == RED_KING) {
+                n_red++;
+                
+                if (x < BOARD_SIZE / 2) {
+                    value -= static_cast<int>(1.0 / (x + 1)) * SIDE_VAL;
+                }
+                else {
+                    value -= static_cast<int>(1.0 / std::abs(x - BOARD_SIZE)) * SIDE_VAL;
+                }
+                
+                value -= static_cast<int>(std::abs(y - BOARD_SIZE) / (float)BOARD_SIZE) * WALL_VAL;
+
+                if (p == RED) value -= PIECE_VAL;
+                else if (p == RED_KING) value -= KING_VAL;
+
+                if (x >= 2 && x <= 5) {
+                    value -= CENTER_VAL;
+                }
+            }
         }
-    return score;
+    }
+
+    if (n_red == 0 && n_black > 0) return 10000;
+    if (n_black == 0 && n_red > 0) return -10000;
+
+    return value;
 }
 
 int CheckersGame::Minimax(int depth, bool isMaximizing, int alpha, int beta) {
     if (depth == 0 || m_gameOver) return Evaluate();
 
     std::vector<Move> moves = GetAllValidMoves(isMaximizing ? BLACK : RED);
-    if (moves.empty()) return isMaximizing ? -1000 : 1000;
+
+    if (moves.empty()) return isMaximizing ? -10000 : 10000;
 
     if (isMaximizing) {
-        int maxEval = -10000;
+        int maxEval = -100000;
         for (auto& mv : moves) {
             CheckersGame temp = *this;
             temp.ExecuteMove(mv.x1, mv.y1, mv.x2, mv.y2, mv.isJump);
-            maxEval = std::max(maxEval, temp.Minimax(depth - 1, false, alpha, beta));
-            alpha = std::max(alpha, maxEval);
+            maxEval = (std::max)(maxEval, temp.Minimax(depth - 1, false, alpha, beta));
+            alpha = (std::max)(alpha, maxEval);
             if (beta <= alpha) break;
         }
         return maxEval;
-    } else {
-        int minEval = 10000;
+    }
+    else {
+        int minEval = 100000;
         for (auto& mv : moves) {
             CheckersGame temp = *this;
             temp.ExecuteMove(mv.x1, mv.y1, mv.x2, mv.y2, mv.isJump);
-            minEval = std::min(minEval, temp.Minimax(depth - 1, true, alpha, beta));
-            beta = std::min(beta, minEval);
+            minEval = (std::min)(minEval, temp.Minimax(depth - 1, true, alpha, beta));
+            beta = (std::min)(beta, minEval);
             if (beta <= alpha) break;
         }
         return minEval;
@@ -270,14 +326,22 @@ int CheckersGame::Minimax(int depth, bool isMaximizing, int alpha, int beta) {
 
 Move CheckersGame::GetBestMove(int depth) {
     std::vector<Move> moves = GetAllValidMoves(BLACK);
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(moves.begin(), moves.end(), g);
+
     Move bestMove = moves[0];
-    int  maxEval  = -10000;
+    int maxEval = -100000;
 
     for (auto& mv : moves) {
         CheckersGame temp = *this;
         temp.ExecuteMove(mv.x1, mv.y1, mv.x2, mv.y2, mv.isJump);
-        int eval = temp.Minimax(depth - 1, false, -10000, 10000);
-        if (eval > maxEval) { maxEval = eval; bestMove = mv; }
+        int eval = temp.Minimax(depth - 1, false, -100000, 100000);
+        if (eval > maxEval) {
+            maxEval = eval;
+            bestMove = mv;
+        }
     }
     return bestMove;
 }

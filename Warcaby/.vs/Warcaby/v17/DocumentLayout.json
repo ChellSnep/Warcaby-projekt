@@ -1,34 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\",
+  "WorkspaceRootPath": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Render.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\DatabaseManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\DatabaseManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\chekers.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Logika.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Render.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\DatabaseManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\DatabaseManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Render.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Logika.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{1F274D90-138C-41C1-BA2A-056E133317F4}|Warcaby\\Warcaby.vcxproj|solutionrelative:Warcaby\\Logika.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,28 +38,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "chekers.cpp",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp",
               "RelativeDocumentMoniker": "Warcaby\\chekers.cpp",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\chekers.cpp",
               "RelativeToolTip": "Warcaby\\chekers.cpp",
-              "ViewState": "AgIAAN8AAAAAAAAAAAAowOEAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-03-24T08:24:44.786Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Render.cpp",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp",
               "RelativeDocumentMoniker": "Warcaby\\Render.cpp",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.cpp",
               "RelativeToolTip": "Warcaby\\Render.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -68,24 +68,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "DatabaseManager.cpp",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp",
               "RelativeDocumentMoniker": "Warcaby\\DatabaseManager.cpp",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.cpp",
               "RelativeToolTip": "Warcaby\\DatabaseManager.cpp",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-30T08:47:46.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-30T08:47:46.74Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Render.h",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h",
               "RelativeDocumentMoniker": "Warcaby\\Render.h",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Render.h",
               "RelativeToolTip": "Warcaby\\Render.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -93,28 +92,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "Logika.cpp",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp",
               "RelativeDocumentMoniker": "Warcaby\\Logika.cpp",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.cpp",
               "RelativeToolTip": "Warcaby\\Logika.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUBAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAPsAAAAAAAAAAAAowBwBAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-24T08:33:02.82Z"
+              "WhenOpened": "2026-03-24T08:33:02.82Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Logika.h",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h",
               "RelativeDocumentMoniker": "Warcaby\\Logika.h",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\Logika.h",
               "RelativeToolTip": "Warcaby\\Logika.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFwAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-03-24T08:25:08.254Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T08:25:08.254Z"
             }
           ]
         },
@@ -124,13 +123,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "DatabaseManager.h",
-              "DocumentMoniker": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h",
+              "DocumentMoniker": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h",
               "RelativeDocumentMoniker": "Warcaby\\DatabaseManager.h",
-              "ToolTip": "C:\\Users\\pet\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h",
+              "ToolTip": "C:\\Users\\Ermes\\Documents\\GitHub\\Warcaby-projekt\\Warcaby\\Warcaby\\DatabaseManager.h",
               "RelativeToolTip": "Warcaby\\DatabaseManager.h",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAgwA0AAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-03-30T08:36:55.427Z",
               "EditorCaption": ""

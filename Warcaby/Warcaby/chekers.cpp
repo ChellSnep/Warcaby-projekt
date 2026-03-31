@@ -74,6 +74,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         SetTimer(hwnd, 1, 16, NULL);
         return 0;
 
+    case WM_SIZE:
+        InvalidateRect(hwnd, NULL, FALSE);
+        return 0;
+
     case WM_TIMER:
         if (g_game.m_anim.active) {
             g_game.UpdateAnimation(0.08f);
@@ -88,7 +92,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         return 0;
 
     case WM_LBUTTONDOWN: {
-        int mx = LOWORD(lParam), my = HIWORD(lParam);
+        int rawX = LOWORD(lParam), rawY = HIWORD(lParam);
+
+        // Get the current window size
+        RECT clientRect;
+        GetClientRect(hwnd, &clientRect);
+        int clientWidth = clientRect.right - clientRect.left;
+        int clientHeight = clientRect.bottom - clientRect.top;
+
+        if (clientWidth == 0 || clientHeight == 0) return 0;
+
+        int mx = rawX * 640 / clientWidth;
+        int my = rawY * 480 / clientHeight;
         POINT pt = { mx, my };
 
         if (g_game.m_anim.active) return 0;
@@ -216,18 +231,33 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
 
-        HDC     mDC = CreateCompatibleDC(hdc);
-        HBITMAP mBM = CreateCompatibleBitmap(hdc, 640, 480);
-        SelectObject(mDC, mBM);
+        // Get the current window size
+        RECT clientRect;
+        GetClientRect(hwnd, &clientRect);
+        int clientWidth = clientRect.right - clientRect.left;
+        int clientHeight = clientRect.bottom - clientRect.top;
 
-        // Pobieramy statystyki z naszej bazy
+        HDC     mDC = CreateCompatibleDC(hdc);
+
+        // We ALWAYS render to a fixed 640x480 internal buffer
+        HBITMAP mBM = CreateCompatibleBitmap(hdc, 640, 480);
+        HGDIOBJ oldBM = SelectObject(mDC, mBM);
+
         GameStats globalStats = g_dbManager.GetGlobalStatistics();
 
+        // Draw everything to our 640x480 buffer just like before
         g_renderer.Draw(mDC, g_game,
             g_selX, g_selY,
             g_ranking, g_history, g_nameInput, globalStats);
 
-        BitBlt(hdc, 0, 0, 640, 480, mDC, 0, 0, SRCCOPY);
+        // Turn on high-quality stretching
+        SetStretchBltMode(hdc, HALFTONE);
+        SetBrushOrgEx(hdc, 0, 0, NULL);
+
+        // Stretch our 640x480 buffer to fit the actual client window
+        StretchBlt(hdc, 0, 0, clientWidth, clientHeight, mDC, 0, 0, 640, 480, SRCCOPY);
+
+        SelectObject(mDC, oldBM);
         DeleteObject(mBM);
         DeleteDC(mDC);
         EndPaint(hwnd, &ps);
