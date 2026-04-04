@@ -1,4 +1,4 @@
-#include "Logika.h"
+﻿#include "Logika.h"
 #include <cmath>
 #include <algorithm>
 #include <vector>

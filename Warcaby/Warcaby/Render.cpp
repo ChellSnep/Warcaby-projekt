@@ -2,9 +2,7 @@
 #include <string>
 #include <algorithm>
 
-// ============================================================
-//  PROSTOKATY PRZYCISKOW
-// ============================================================
+// --- Wymiary Przycisków ---
 
 RECT GameRenderer::Get2PBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 160, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 205 }; }
 RECT GameRenderer::GetAIBtnRect() { return { (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 - 90, 220, (BOARD_PIXELS + SIDEBAR_WIDTH) / 2 + 90, 265 }; }
@@ -243,9 +241,7 @@ void GameRenderer::DrawRanking(HDC hdc,
     SelectObject(hdc, oldFont);
     DeleteObject(titleFont);
 
-    // ============================================================
-    //  LEWA POLOWA
-    // ============================================================
+    // --- LEWA POLOWA ---
     RECT secL = { 5, 48, 308, 68 };
     HBRUSH secBr = CreateSolidBrush(RGB(180, 140, 80));
     FillRect(hdc, &secL, secBr);
@@ -304,9 +300,8 @@ void GameRenderer::DrawRanking(HDC hdc,
         TextOut(hdc, 115, 106, L"Brak graczy", 11);
     }
 
-    // ============================================================
-    //  PRAWA POLOWA
-    // ============================================================
+    // --- PRAWA POLOWA ---
+
     RECT secR = { 318, 48, 635, 68 };
     HBRUSH secRBr = CreateSolidBrush(RGB(80, 110, 170));
     FillRect(hdc, &secR, secRBr);
@@ -370,9 +365,8 @@ void GameRenderer::DrawRanking(HDC hdc,
     MoveToEx(hdc, 312, 45, NULL); LineTo(hdc, 312, 385);
     SelectObject(hdc, oldPDiv); DeleteObject(divPen);
 
-    // ============================================================
-    //  PASEK STATYSTYK GLOBALNYCH
-    // ============================================================
+    // --- PASEK STATYSTYK GLOBALNYCH ---
+
     RECT statsBg = { 10, 395, 630, 435 };
     HBRUSH statsBr = CreateSolidBrush(RGB(220, 230, 210));
     FillRect(hdc, &statsBg, statsBr);

@@ -1,4 +1,4 @@
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:wWinMainCRTStartup")
+﻿#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:wWinMainCRTStartup")
 #include "Logika.h"
 #include "Render.h"
 #include "DatabaseManager.h"
@@ -20,9 +20,7 @@ std::vector<GameHistoryEntry> g_history;
 std::wstring g_nameInput = L"";
 bool         g_lastWasAI = false;
 
-// ============================================================
-//  ZAPIS WYNIKU DO NOWEJ KLASY DB
-// ============================================================
+// --- ZAPIS WYNIKU DO NOWEJ KLASY DB ---
 
 static void SaveResult(const std::wstring& name,
     int totalMoves, bool vsAI,
@@ -63,9 +61,7 @@ static void SaveResult(const std::wstring& name,
     g_dbManager.UpdatePlayerStats(name, totalMoves);
 }
 
-// ============================================================
-//  PROCEDURA OKNA
-// ============================================================
+// -------------------------------------------------------------
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
@@ -94,7 +90,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     case WM_LBUTTONDOWN: {
         int rawX = LOWORD(lParam), rawY = HIWORD(lParam);
 
-        // Get the current window size
         RECT clientRect;
         GetClientRect(hwnd, &clientRect);
         int clientWidth = clientRect.right - clientRect.left;
@@ -231,7 +226,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
 
-        // Get the current window size
         RECT clientRect;
         GetClientRect(hwnd, &clientRect);
         int clientWidth = clientRect.right - clientRect.left;
@@ -239,22 +233,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         HDC     mDC = CreateCompatibleDC(hdc);
 
-        // We ALWAYS render to a fixed 640x480 internal buffer
         HBITMAP mBM = CreateCompatibleBitmap(hdc, 640, 480);
         HGDIOBJ oldBM = SelectObject(mDC, mBM);
 
         GameStats globalStats = g_dbManager.GetGlobalStatistics();
 
-        // Draw everything to our 640x480 buffer just like before
         g_renderer.Draw(mDC, g_game,
             g_selX, g_selY,
             g_ranking, g_history, g_nameInput, globalStats);
 
-        // Turn on high-quality stretching
         SetStretchBltMode(hdc, HALFTONE);
         SetBrushOrgEx(hdc, 0, 0, NULL);
 
-        // Stretch our 640x480 buffer to fit the actual client window
         StretchBlt(hdc, 0, 0, clientWidth, clientHeight, mDC, 0, 0, 640, 480, SRCCOPY);
 
         SelectObject(mDC, oldBM);
@@ -273,12 +263,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-// ============================================================
-//  PUNKT WEJSCIA
-// ============================================================
+// -----------------------------------------------------
 
 int WINAPI wWinMain(HINSTANCE h, HINSTANCE, PWSTR, int n) {
-    // Inicjalizacja naszej bazy i wczytanie danych
+    // Inicjalizacja bazy i wczytanie danych
     g_dbManager.Initialize();
     g_ranking = g_dbManager.LoadRanking();
     g_history = g_dbManager.LoadHistory();

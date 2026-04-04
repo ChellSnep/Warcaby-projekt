@@ -32,7 +32,6 @@ struct GameHistoryEntry {
     int  blackCaptures;
 };
 
-// NOWOŒÆ: Struktura do statystyk agreguj¹cych
 struct GameStats {
     int totalGames = 0;
     double avgMoves = 0.0;
